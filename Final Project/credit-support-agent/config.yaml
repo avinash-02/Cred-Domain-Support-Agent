@@ -1,0 +1,47 @@
+models:
+  embedder: sentence-transformers/all-MiniLM-L6-v2
+  mock_llm_seed: 42
+
+chunking:
+  fixed_chunk_size: 256
+  fixed_chunk_overlap: 50
+  sentence_chunk_overlap: 1
+
+retrieval:
+  top_k: 5
+  similarity_threshold: 0.5
+  calibration_samples: 50
+
+vectordb:
+  provider: chromadb
+  persistent_dir: ./chromadb_data
+  collection_fixed: banking_docs_fixed_chunks
+  collection_sentence: banking_docs_sentence_chunks
+
+guardrails:
+  pii_fields:
+    - pan
+    - aadhaar
+    - account_number
+  injection_patterns:
+    - "ignore.*instruction"
+    - "system.*prompt"
+    - "bypass.*safet"
+
+evaluation:
+  metrics:
+    - accuracy
+    - grounding
+    - completeness
+    - safety
+  test_query_count: 15
+
+governance:
+  max_tokens_per_request: 4000
+  max_cost_per_request_usd: 0.10
+  cache_enabled: true
+
+api:
+  host: 0.0.0.0
+  port: 8000
+  log_level: INFO
