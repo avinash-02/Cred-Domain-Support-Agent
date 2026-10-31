@@ -76,7 +76,7 @@
       "id": "doc_013",
       "title": "Loan Application Status Inquiry",
       "topic": "loan_status_inquiry",
-      "content": "Check loan status online via customer portal using application ID. Status stages: Under Review (1-5 days), Documents Requested (customer notified), Approved (loan disbursed within 2-3 days), Rejected (reason communicated). Customer provides identity and application reference for tracking. Escalation triggered if application exceeds 7 days in Under Review stage. Contact support team for assistance or status updates."
+      "content": "Check loan status online via customer portal using application ID. Status stages: Submitted (initial entry), Under Review (1-5 days), Approved (loan disbursed within 2-3 days), Rejected (reason communicated), Disbursed (funds transferred). Customer provides identity and application reference for tracking. Escalation triggered if application exceeds 7 days in Under Review stage. Contact support team for assistance or status updates."
     },
     {
       "id": "doc_014",
