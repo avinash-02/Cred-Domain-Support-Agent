@@ -6,6 +6,13 @@ Uses empirically calibrated threshold of 0.7321.
 """
 
 import sys
+import os
+
+# Fix Windows console encoding for Unicode
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
 sys.path.insert(0, '.')
 
 from src.retrieval.rag_pipeline import RAGPipeline
