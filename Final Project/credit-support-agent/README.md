@@ -63,6 +63,38 @@ credit-support-agent/
 - Dual chunking strategies (fixed-size + sentence-based)
 - ChromaDB collections with embeddings
 - Retrieval evaluation (Precision/Recall metrics)
+- **Grounded generation with empirically calibrated threshold**
+
+### Groundedness Calibration Results
+
+**Threshold Determination**:
+Measured top-1 cosine distance for in-scope and out-of-scope queries to empirically determine the "I don't know" threshold.
+
+**In-Scope Queries (Banking Domain)**:
+| Query | Top-1 Distance |
+|-------|-----------------|
+| What is the minimum income requirement for a home loan? | 0.3245 |
+| How is EMI calculated? | 0.3127 |
+| What documents are needed for KYC? | 0.5356 |
+| What is CIBIL score and why does it matter? | 0.5890 |
+| What are the penalties for prepayment? | 0.3562 |
+
+**In-Scope Statistics**: Min=0.3127, Max=0.5890, Avg=0.4236
+
+**Out-of-Scope Queries (Non-Banking)**:
+| Query | Top-1 Distance |
+|-------|-----------------|
+| What is the capital of France? | 0.8752 |
+| How do I cook pasta? | 0.9082 |
+
+**Out-of-Scope Statistics**: Min=0.8752, Max=0.9082, Avg=0.8917
+
+**Separation**: CLEAR (gap of 0.2862 between max in-scope and min out-of-scope)
+
+**Chosen Threshold**: **0.7321**
+- Midpoint between in-scope max (0.5890) and out-of-scope min (0.8752)
+- **Decision rule**: If top-1 distance > 0.7321 → respond "I don't know" | else → generate grounded answer
+- Rationale: Empirically calibrated for this specific knowledge base; avoids untested preset values (0.5/0.6/0.7)
 
 ### Part 2: CrewAI Multi-Agent System
 - MockLLM (BaseLLM subclass, deterministic, zero network calls)
