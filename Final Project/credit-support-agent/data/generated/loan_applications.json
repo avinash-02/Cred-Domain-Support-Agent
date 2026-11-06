@@ -1,402 +1,402 @@
-{
+  {
   "total_records": 50,
   "records": [
     {
       "record_id": "LOAN_0001",
-      "category": "Personal Loan",
-      "status": "Submitted",
+      "category": "personal_loan",
+      "status": "submitted",
       "loan_amount_inr": 770487,
       "days_since_created": 3,
       "flagged_for_fraud_review": true
     },
     {
       "record_id": "LOAN_0002",
-      "category": "Home Loan",
-      "status": "Under Review",
+      "category": "home_loan",
+      "status": "under_review",
       "loan_amount_inr": 5614226,
       "days_since_created": 7,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0003",
-      "category": "Auto Loan",
-      "status": "Approved",
+      "category": "auto_loan",
+      "status": "approved",
       "loan_amount_inr": 1844492,
       "days_since_created": 3,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0004",
-      "category": "Business Loan",
-      "status": "Rejected",
+      "category": "business_loan",
+      "status": "rejected",
       "loan_amount_inr": 37098928,
       "days_since_created": 2,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0005",
-      "category": "Education Loan",
-      "status": "Disbursed",
+      "category": "education_loan",
+      "status": "disbursed",
       "loan_amount_inr": 166653,
       "days_since_created": 0,
       "flagged_for_fraud_review": true
     },
     {
       "record_id": "LOAN_0006",
-      "category": "Personal Loan",
-      "status": "Submitted",
+      "category": "personal_loan",
+      "status": "submitted",
       "loan_amount_inr": 343962,
       "days_since_created": 16,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0007",
-      "category": "Home Loan",
-      "status": "Under Review",
+      "category": "home_loan",
+      "status": "under_review",
       "loan_amount_inr": 4335942,
       "days_since_created": 22,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0008",
-      "category": "Auto Loan",
-      "status": "Approved",
+      "category": "auto_loan",
+      "status": "approved",
       "loan_amount_inr": 1442825,
       "days_since_created": 13,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0009",
-      "category": "Business Loan",
-      "status": "Rejected",
+      "category": "business_loan",
+      "status": "rejected",
       "loan_amount_inr": 40044950,
       "days_since_created": 8,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0010",
-      "category": "Education Loan",
-      "status": "Disbursed",
+      "category": "education_loan",
+      "status": "disbursed",
       "loan_amount_inr": 113628,
       "days_since_created": 24,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0011",
-      "category": "Personal Loan",
-      "status": "Submitted",
+      "category": "personal_loan",
+      "status": "submitted",
       "loan_amount_inr": 832052,
       "days_since_created": 13,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0012",
-      "category": "Home Loan",
-      "status": "Under Review",
+      "category": "home_loan",
+      "status": "under_review",
       "loan_amount_inr": 3608513,
       "days_since_created": 6,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0013",
-      "category": "Auto Loan",
-      "status": "Approved",
+      "category": "auto_loan",
+      "status": "approved",
       "loan_amount_inr": 1005889,
       "days_since_created": 3,
       "flagged_for_fraud_review": true
     },
     {
       "record_id": "LOAN_0014",
-      "category": "Business Loan",
-      "status": "Rejected",
+      "category": "business_loan",
+      "status": "rejected",
       "loan_amount_inr": 6990526,
       "days_since_created": 11,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0015",
-      "category": "Education Loan",
-      "status": "Disbursed",
+      "category": "education_loan",
+      "status": "disbursed",
       "loan_amount_inr": 1366105,
       "days_since_created": 8,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0016",
-      "category": "Personal Loan",
-      "status": "Submitted",
+      "category": "personal_loan",
+      "status": "submitted",
       "loan_amount_inr": 865179,
       "days_since_created": 14,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0017",
-      "category": "Home Loan",
-      "status": "Under Review",
+      "category": "home_loan",
+      "status": "under_review",
       "loan_amount_inr": 7350753,
       "days_since_created": 2,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0018",
-      "category": "Auto Loan",
-      "status": "Approved",
+      "category": "auto_loan",
+      "status": "approved",
       "loan_amount_inr": 1618353,
       "days_since_created": 19,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0019",
-      "category": "Business Loan",
-      "status": "Rejected",
+      "category": "business_loan",
+      "status": "rejected",
       "loan_amount_inr": 24768915,
       "days_since_created": 18,
       "flagged_for_fraud_review": true
     },
     {
       "record_id": "LOAN_0020",
-      "category": "Education Loan",
-      "status": "Disbursed",
+      "category": "education_loan",
+      "status": "disbursed",
       "loan_amount_inr": 245867,
       "days_since_created": 1,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0021",
-      "category": "Personal Loan",
-      "status": "Submitted",
+      "category": "personal_loan",
+      "status": "submitted",
       "loan_amount_inr": 910620,
       "days_since_created": 9,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0022",
-      "category": "Home Loan",
-      "status": "Under Review",
+      "category": "home_loan",
+      "status": "under_review",
       "loan_amount_inr": 4905582,
       "days_since_created": 27,
       "flagged_for_fraud_review": true
     },
     {
       "record_id": "LOAN_0023",
-      "category": "Auto Loan",
-      "status": "Approved",
+      "category": "auto_loan",
+      "status": "approved",
       "loan_amount_inr": 882952,
       "days_since_created": 14,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0024",
-      "category": "Business Loan",
-      "status": "Rejected",
+      "category": "business_loan",
+      "status": "rejected",
       "loan_amount_inr": 24983473,
       "days_since_created": 5,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0025",
-      "category": "Education Loan",
-      "status": "Disbursed",
+      "category": "education_loan",
+      "status": "disbursed",
       "loan_amount_inr": 539368,
       "days_since_created": 21,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0026",
-      "category": "Personal Loan",
-      "status": "Submitted",
+      "category": "personal_loan",
+      "status": "submitted",
       "loan_amount_inr": 816751,
       "days_since_created": 20,
       "flagged_for_fraud_review": true
     },
     {
       "record_id": "LOAN_0027",
-      "category": "Home Loan",
-      "status": "Under Review",
+      "category": "home_loan",
+      "status": "under_review",
       "loan_amount_inr": 3871230,
       "days_since_created": 17,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0028",
-      "category": "Auto Loan",
-      "status": "Approved",
+      "category": "auto_loan",
+      "status": "approved",
       "loan_amount_inr": 642679,
       "days_since_created": 14,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0029",
-      "category": "Business Loan",
-      "status": "Rejected",
+      "category": "business_loan",
+      "status": "rejected",
       "loan_amount_inr": 43449656,
       "days_since_created": 22,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0030",
-      "category": "Education Loan",
-      "status": "Disbursed",
+      "category": "education_loan",
+      "status": "disbursed",
       "loan_amount_inr": 1535740,
       "days_since_created": 10,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0031",
-      "category": "Personal Loan",
-      "status": "Submitted",
+      "category": "personal_loan",
+      "status": "submitted",
       "loan_amount_inr": 913694,
       "days_since_created": 1,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0032",
-      "category": "Home Loan",
-      "status": "Under Review",
+      "category": "home_loan",
+      "status": "under_review",
       "loan_amount_inr": 1538552,
       "days_since_created": 25,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0033",
-      "category": "Auto Loan",
-      "status": "Approved",
+      "category": "auto_loan",
+      "status": "approved",
       "loan_amount_inr": 861493,
       "days_since_created": 2,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0034",
-      "category": "Business Loan",
-      "status": "Rejected",
+      "category": "business_loan",
+      "status": "rejected",
       "loan_amount_inr": 38562808,
       "days_since_created": 28,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0035",
-      "category": "Education Loan",
-      "status": "Disbursed",
+      "category": "education_loan",
+      "status": "disbursed",
       "loan_amount_inr": 545910,
       "days_since_created": 20,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0036",
-      "category": "Personal Loan",
-      "status": "Submitted",
+      "category": "personal_loan",
+      "status": "submitted",
       "loan_amount_inr": 774079,
       "days_since_created": 14,
       "flagged_for_fraud_review": true
     },
     {
       "record_id": "LOAN_0037",
-      "category": "Home Loan",
-      "status": "Under Review",
+      "category": "home_loan",
+      "status": "under_review",
       "loan_amount_inr": 3342608,
       "days_since_created": 7,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0038",
-      "category": "Auto Loan",
-      "status": "Approved",
+      "category": "auto_loan",
+      "status": "approved",
       "loan_amount_inr": 1430317,
       "days_since_created": 8,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0039",
-      "category": "Business Loan",
-      "status": "Rejected",
+      "category": "business_loan",
+      "status": "rejected",
       "loan_amount_inr": 29251707,
       "days_since_created": 28,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0040",
-      "category": "Education Loan",
-      "status": "Disbursed",
+      "category": "education_loan",
+      "status": "disbursed",
       "loan_amount_inr": 859161,
       "days_since_created": 7,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0041",
-      "category": "Personal Loan",
-      "status": "Submitted",
+      "category": "personal_loan",
+      "status": "submitted",
       "loan_amount_inr": 245051,
       "days_since_created": 16,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0042",
-      "category": "Home Loan",
-      "status": "Under Review",
+      "category": "home_loan",
+      "status": "under_review",
       "loan_amount_inr": 1790481,
       "days_since_created": 27,
       "flagged_for_fraud_review": true
     },
     {
       "record_id": "LOAN_0043",
-      "category": "Auto Loan",
-      "status": "Approved",
+      "category": "auto_loan",
+      "status": "approved",
       "loan_amount_inr": 1615849,
       "days_since_created": 5,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0044",
-      "category": "Business Loan",
-      "status": "Rejected",
+      "category": "business_loan",
+      "status": "rejected",
       "loan_amount_inr": 28830675,
       "days_since_created": 19,
       "flagged_for_fraud_review": true
     },
     {
       "record_id": "LOAN_0045",
-      "category": "Education Loan",
-      "status": "Disbursed",
+      "category": "education_loan",
+      "status": "disbursed",
       "loan_amount_inr": 900313,
       "days_since_created": 19,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0046",
-      "category": "Personal Loan",
-      "status": "Submitted",
+      "category": "personal_loan",
+      "status": "submitted",
       "loan_amount_inr": 654816,
       "days_since_created": 8,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0047",
-      "category": "Home Loan",
-      "status": "Under Review",
+      "category": "home_loan",
+      "status": "under_review",
       "loan_amount_inr": 1192619,
       "days_since_created": 21,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0048",
-      "category": "Auto Loan",
-      "status": "Approved",
+      "category": "auto_loan",
+      "status": "approved",
       "loan_amount_inr": 1729650,
       "days_since_created": 28,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0049",
-      "category": "Business Loan",
-      "status": "Rejected",
+      "category": "business_loan",
+      "status": "rejected",
       "loan_amount_inr": 18406335,
       "days_since_created": 24,
       "flagged_for_fraud_review": false
     },
     {
       "record_id": "LOAN_0050",
-      "category": "Education Loan",
-      "status": "Disbursed",
+      "category": "education_loan",
+      "status": "disbursed",
       "loan_amount_inr": 333941,
       "days_since_created": 9,
       "flagged_for_fraud_review": false

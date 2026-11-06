@@ -3,14 +3,11 @@ uvicorn==0.24.0
 pydantic==2.5.0
 pydantic-settings==2.1.0
 
-crewai==0.1.0
-autogen-agentchat==0.2.0
+crewai==0.11.2
+autogen-agentchat==0.5.7
 
 chromadb==1.0.21
-sentence-transformers==2.2.2
-
-numpy==1.24.3
-pandas==2.1.3
+sentence-transformers>=3.0.0
 
 python-dotenv==1.0.0
 httpx==0.25.2

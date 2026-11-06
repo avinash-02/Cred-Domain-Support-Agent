@@ -22,30 +22,29 @@ class LoanApplication:
 
 
 # Categories and statuses from requirements
-# Categories and statuses from requirements
 LOAN_CATEGORIES = [
-    "Personal Loan",
-    "Home Loan",
-    "Auto Loan",
-    "Business Loan",
-    "Education Loan",
+    "personal_loan",
+    "home_loan",
+    "auto_loan",
+    "business_loan",
+    "education_loan",
 ]
 
 LOAN_STATUSES = [
-    "Submitted",
-    "Under Review",
-    "Approved",
-    "Rejected",
-    "Disbursed",
+    "under_review",
+    "documents_requested",
+    "approved",
+    "rejected",
+    "disbursed",
 ]
 
 # Realistic loan amount ranges by category (reasoning: market norms)
 LOAN_AMOUNT_RANGES = {
-    "Personal Loan": (100_000, 1_000_000),      # Small unsecured loans
-    "Home Loan": (1_000_000, 10_000_000),       # Large secured mortgages
-    "Auto Loan": (300_000, 2_000_000),          # Vehicle financing
-    "Business Loan": (500_000, 50_000_000),     # Variable business needs
-    "Education Loan": (100_000, 2_000_000),     # Education costs
+    "personal_loan": (100_000, 1_000_000),      # Small unsecured loans
+    "home_loan": (1_000_000, 10_000_000),       # Large secured mortgages
+    "auto_loan": (300_000, 2_000_000),          # Vehicle financing
+    "business_loan": (500_000, 50_000_000),     # Variable business needs
+    "education_loan": (100_000, 2_000_000),     # Education costs
 }
 
 
@@ -63,7 +62,11 @@ def generate_dataset(seed: int = 42, num_records: int = 50) -> List[LoanApplicat
     random.seed(seed)
     records = []
 
-    # Track indices to distribute categories and statuses evenly
+    # Ensure minimum coverage of all categories and statuses
+    min_per_category = 3
+    min_per_status = 1
+
+    # Generate one record per category to ensure coverage
     category_idx = 0
     status_idx = 0
 
