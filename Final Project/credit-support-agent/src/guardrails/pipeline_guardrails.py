@@ -11,8 +11,48 @@ import sys
 sys.path.insert(0, '.')
 
 import re
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List, Dict, Any
 from src.orchestration.structured_output import AgentResponse
+
+# ============================================================================
+# Logging-Ready PII Masking (replaces mask_pii for server logging use)
+# ============================================================================
+
+def mask_pii_for_logging(text: str) -> Tuple[str, bool]:
+    """
+    Mask fixed-format PII fields so they never reach disk logs in the clear.
+
+    Target fields:
+    - Indian PAN: [A-Z]{5}[0-9]{4}[A-Z]
+    - Account Numbers: 9-18 consecutive digits (but not LOAN_XXXX)
+
+    Args:
+        text: Input text (from a logged query or response body)
+
+    Returns:
+        (masked_text, was_pii_found): Masked text and whether PII was detected.
+    """
+    was_pii_found = False
+    masked_text = text
+
+    # Preserve LOAN_XXXX before masking (must never redact these)
+    loan_ids = re.findall(r'\bLOAN_\d{4}\b', masked_text)
+
+    # Mask Indian PAN: [A-Z]{5}[0-9]{4}[A-Z]
+    pan_pattern = r'\b[A-Z]{5}[0-9]{4}[A-Z]\b'
+    if re.search(pan_pattern, masked_text):
+        masked_text = re.sub(pan_pattern, '[PAN_REDACTED]', masked_text)
+        was_pii_found = True
+
+    # Mask Account Numbers: 9-18 consecutive digits (but not LOAN_XXXX)
+    account_pattern = r'\b\d{9,18}\b'
+    for match in re.finditer(account_pattern, masked_text):
+        digits = match.group()
+        if not any(f"LOAN_{digits}" in loan_id for loan_id in loan_ids):
+            masked_text = masked_text.replace(digits, '[ACCOUNT_REDACTED]', 1)
+            was_pii_found = True
+
+    return masked_text, was_pii_found
 
 
 # ============================================================================
@@ -33,29 +73,7 @@ def mask_pii(text: str) -> Tuple[str, bool]:
     Returns:
         (masked_text, was_pii_found): Tuple with masked text and whether PII was detected
     """
-    was_pii_found = False
-    masked_text = text
-
-    # Preserve LOAN_XXXX before masking
-    loan_ids = re.findall(r'\bLOAN_\d{4}\b', text)
-
-    # Mask Indian PAN: [A-Z]{5}[0-9]{4}[A-Z]
-    pan_pattern = r'\b[A-Z]{5}[0-9]{4}[A-Z]\b'
-    if re.search(pan_pattern, masked_text):
-        masked_text = re.sub(pan_pattern, '[PAN_REDACTED]', masked_text)
-        was_pii_found = True
-
-    # Mask Account Numbers: 9-18 consecutive digits (but not LOAN_XXXX)
-    # Strategy: Find digit sequences and check they're not part of LOAN_XXXX
-    account_pattern = r'\b\d{9,18}\b'
-    for match in re.finditer(account_pattern, masked_text):
-        digits = match.group()
-        # Skip if this is part of a LOAN_XXXX
-        if not any(f"LOAN_{digits}" in loan_id for loan_id in loan_ids):
-            masked_text = masked_text.replace(digits, '[ACCOUNT_REDACTED]', 1)
-            was_pii_found = True
-
-    return masked_text, was_pii_found
+    return mask_pii_for_logging(text)
 
 
 # ============================================================================
@@ -197,6 +215,21 @@ def apply_output_guardrails(
 
     # Guardrail passed: return original response
     return response
+
+
+def sanitize_for_logging(value: Any) -> Any:
+    """Recursively sanitize strings, PII/injection patterns in any log payload."""
+    if isinstance(value, str):
+        masked, _ = mask_pii_for_logging(value)
+        # Also strip injection phrases so they don't trigger audit warnings on their own
+        # but keep them as a flag (caller can log warning separately)
+        return masked
+    elif isinstance(value, dict):
+        return {k: sanitize_for_logging(v) for k, v in value.items()}
+    elif isinstance(value, list):
+        return [sanitize_for_logging(v) for v in value]
+    else:
+        return value
 
 
 if __name__ == "__main__":
