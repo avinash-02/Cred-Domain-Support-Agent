@@ -1,4 +1,4 @@
-# Multi-Agent Credit Support & Policy Intelligence System
+# Multi-Agent Cred Support & Policy Intelligence System
 
 A production-grade, enterprise multi-agent credit support agent designed for retail banking operations. The system integrates dual-strategy Retrieval-Augmented Generation (RAG), multi-agent orchestration via CrewAI, stateful session memory, dual-layer guardrails, structured AutoGen draft review, four-layer AI governance, and normalized response caching.
 
