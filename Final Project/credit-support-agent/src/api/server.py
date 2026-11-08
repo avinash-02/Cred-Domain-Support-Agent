@@ -16,6 +16,7 @@ os.environ["CREWAI_DISABLE_TELEMETRY"] = "true"
 os.environ["OTEL_SDK_DISABLED"] = "true"
 
 import logging
+import re
 from typing import Optional
 from fastapi import FastAPI, WebSocket, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -30,7 +31,7 @@ from src.api.schemas import (
 )
 from src.orchestration.crew import run_crew_async
 from src.orchestration.structured_output import AgentResponse
-from src.guardrails.pipeline_guardrails import apply_input_guardrails, apply_output_guardrails
+from src.guardrails.pipeline_guardrails import apply_input_guardrails, apply_output_guardrails, sanitize_for_logging, mask_pii_for_logging
 from src.retrieval.rag_pipeline import RAGPipeline
 from src.memory.session_memory import get_session_history, SESSION_STORE
 from langchain_core.messages import HumanMessage, AIMessage
@@ -46,19 +47,27 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # ============================================================================
-# Global RAG Pipeline — eagerly initialised at import time so that both
+# Global RAG Pipeline — lazily initialised on first use so that both
 # uvicorn and the TestClient (which skips lifespan by default) share the
-# same indexed pipeline.
+# same indexed pipeline without import-time side effects.
 # ============================================================================
 
-rag_pipeline: RAGPipeline = RAGPipeline(backend="chromadb")
-rag_pipeline.index_documents()
-logger.info("RAG pipeline initialized at module load")
+rag_pipeline: Optional[RAGPipeline] = None
+
+
+def get_rag_pipeline() -> RAGPipeline:
+    """Get or lazily initialise the RAG pipeline."""
+    global rag_pipeline
+    if rag_pipeline is None:
+        rag_pipeline = RAGPipeline(backend="chromadb")
+        rag_pipeline.index_documents()
+        logger.info("RAG pipeline lazily initialised")
+    return rag_pipeline
 
 
 def _get_rag_doc_count() -> int:
     """Return total chunks across both collections."""
-    stats = rag_pipeline.get_stats()
+    stats = get_rag_pipeline().get_stats()
     fixed_count = stats.get("fixed", {}).get("total_chunks", 0)
     sentence_count = stats.get("sentence", {}).get("total_chunks", 0)
     return fixed_count + sentence_count
@@ -97,36 +106,37 @@ async def ask(request: AskRequest) -> AgentResponse:
     pipeline, and returns the validated AgentResponse.
     """
     try:
-        logger.info(f"Received query: {request.query[:100]}... (session: {request.session_id})")
+        logger.info(f"Received query: {sanitize_for_logging(request.query[:100])}... (session: {request.session_id})")
 
         # Apply input guardrails
         sanitized_query, injection_rejection = apply_input_guardrails(request.query)
 
         # If injection detected, return rejection immediately
         if injection_rejection is not None:
-            logger.warning("Prompt injection detected in query")
+            logger.warning(f"Prompt injection detected in query (session: {sanitize_for_logging(request.session_id)})")
             return injection_rejection
 
         # If session_id provided, store the query in session memory
         if request.session_id:
             session = get_session_history(request.session_id)
             session.add_message(HumanMessage(content=sanitized_query))
-            logger.info(f"Query added to session {request.session_id}")
+            logger.info(f"Query added to session {sanitize_for_logging(request.session_id)}")
 
         # Run the crew pipeline using async wrapper
         response = await run_crew_async(sanitized_query)
 
         # Apply output guardrails (groundedness check)
-        retrieved_contexts = rag_pipeline.retrieve(sanitized_query, strategy="fixed", top_k=5)
+        rag = get_rag_pipeline()
+        retrieved_contexts = rag.retrieve(sanitized_query, strategy="fixed", top_k=5)
         response = apply_output_guardrails(response, retrieved_contexts)
 
         # Store response in session memory
         if request.session_id:
             session = get_session_history(request.session_id)
             session.add_message(AIMessage(content=response.answer))
-            logger.info(f"Response added to session {request.session_id}")
+            logger.info(f"Response added to session {sanitize_for_logging(request.session_id)}")
 
-        logger.info(f"Query processed successfully. Intent: {response.intent}")
+        logger.info(f"Query processed successfully. Intent: {response.intent}, session: {sanitize_for_logging(request.session_id)}")
         return response
 
     except Exception as e:
@@ -145,6 +155,8 @@ async def add_document(request: AddDocumentRequest) -> AddDocumentResponse:
     try:
         logger.info(f"Received document ingestion request (text length: {len(request.text)})")
 
+        rag = get_rag_pipeline()
+
         # Chunk the document using the pipeline's own fixed chunker
         from src.chunking.strategies import FixedSizeChunker
         chunker = FixedSizeChunker(chunk_size=256, overlap=50)
@@ -152,11 +164,13 @@ async def add_document(request: AddDocumentRequest) -> AddDocumentResponse:
         # FixedSizeChunker.chunk expects (doc_id, doc_title, content)
         doc_id = f"api_doc_{_get_rag_doc_count() + 1}"
         doc_title = (request.metadata or {}).get("title", "API Ingested Document")
-        chunks = chunker.chunk(doc_id, doc_title, request.text)
+        # Mask text before processing/logging
+        sanitized_text, _ = mask_pii_for_logging(request.text)
+        chunks = chunker.chunk(doc_id, doc_title, sanitized_text)
 
         # Embed chunks
         chunk_texts = [c.text for c in chunks]
-        embeddings = rag_pipeline.embedding_gen.embed(chunk_texts)
+        embeddings = rag.embedding_gen.embed(chunk_texts)
         metadatas = [
             {
                 "doc_id": c.doc_id,
@@ -169,8 +183,8 @@ async def add_document(request: AddDocumentRequest) -> AddDocumentResponse:
         ]
 
         # Upsert into the fixed-chunk collection
-        rag_pipeline.vectordb.upsert_chunks(
-            collection_name=rag_pipeline.fixed_collection_name,
+        rag.vectordb.upsert_chunks(
+            collection_name=rag.fixed_collection_name,
             chunk_ids=[c.chunk_id for c in chunks],
             embeddings=embeddings,
             texts=chunk_texts,
@@ -245,7 +259,7 @@ async def websocket_chat(websocket: WebSocket):
             if message.session_id:
                 session_id = message.session_id
 
-            logger.info(f"WebSocket message received (type: {message.type}, session: {session_id})")
+            logger.info(f"WebSocket message received (type: {message.type}, session: {sanitize_for_logging(session_id)})")
 
             # Process user query
             if message.type == "user_query":
@@ -272,7 +286,8 @@ async def websocket_chat(websocket: WebSocket):
                     response = await run_crew_async(sanitized_query)
 
                     # Apply output guardrails
-                    retrieved_contexts = rag_pipeline.retrieve(sanitized_query, strategy="fixed", top_k=5)
+                    rag = get_rag_pipeline()
+                    retrieved_contexts = rag.retrieve(sanitized_query, strategy="fixed", top_k=5)
                     response = apply_output_guardrails(response, retrieved_contexts)
 
                     # Store response in session memory
@@ -291,7 +306,7 @@ async def websocket_chat(websocket: WebSocket):
                         "session_id": session_id,
                     })
 
-                    logger.info(f"WebSocket response sent (intent: {response.intent})")
+                    logger.info(f"WebSocket response sent (intent: {response.intent}, session: {sanitize_for_logging(session_id)})")
 
                 except Exception as e:
                     logger.error(f"Error processing WebSocket query: {str(e)}", exc_info=True)
@@ -308,7 +323,7 @@ async def websocket_chat(websocket: WebSocket):
                 })
 
     except WebSocketDisconnect:
-        logger.info(f"WebSocket client disconnected (session: {session_id})")
+        logger.info(f"WebSocket client disconnected (session: {sanitize_for_logging(session_id)})")
         # Client disconnected gracefully — no action needed
 
     except Exception as e:
