@@ -146,6 +146,12 @@ pytest tests/
 - `src/api/routes.py` — FastAPI endpoints
 - `src/utils/metrics.py` — Evaluation scoring
 
+## AI Governance
+
+This system is classified under the **High Risk** tier. It processes sensitive financial data, including loan application records, customer credit statuses, arrears information, and PII. 
+
+**Justification**: The system's handling of core financial decisions and personal data necessitates strict governance. To mitigate risk, we enforce least-privilege tool isolation (ensuring only authorized agents can access loan data) and perform pre-disk PII masking on all ingested document content and query logs.
+
 ## Reproduction
 
 All results are deterministic and reproducible using:

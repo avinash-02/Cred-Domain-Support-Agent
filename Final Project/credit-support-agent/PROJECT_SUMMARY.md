@@ -287,6 +287,15 @@ credit-support-agent/
 8. Guardrails (PII masking, injection detection, groundedness)
 9. FastAPI Backend (HTTP + WebSocket endpoints)
 10. Production Hardening (AutoGen review, caching, budgeting)
+11. AI Governance (Risk classification, least autonomy, runtime budget)
+
+---
+
+## AI Governance
+
+This system is classified under the **High Risk** tier. It processes sensitive financial data, including loan application records, customer credit statuses, arrears information, and PII. 
+
+**Justification**: The system's handling of core financial decisions and personal data necessitates strict governance. To mitigate risk, we enforce least-privilege tool isolation (ensuring only authorized agents can access loan data) and perform pre-disk PII masking on all ingested document content and query logs.
 
 ---
 

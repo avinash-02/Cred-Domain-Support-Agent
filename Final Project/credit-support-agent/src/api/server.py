@@ -86,6 +86,17 @@ def _get_rag_doc_count() -> int:
 # ============================================================================
 
 from src.observability.logging import StructuredLoggingMiddleware
+from starlette.testclient import TestClient
+
+MAX_REQUEST_TOKENS = 4000
+MAX_REQUEST_CHARS = MAX_REQUEST_TOKENS * 4
+
+class BudgetExceeded(Exception):
+    pass
+
+def check_budget(content: str):
+    if len(content) > MAX_REQUEST_CHARS:
+        raise BudgetExceeded("Token budget exceeded")
 
 app = FastAPI(
     title="Credit Support Agent API",
@@ -119,6 +130,7 @@ async def ask(request: AskRequest) -> AgentResponse:
     pipeline, and returns the validated AgentResponse.
     """
     try:
+        check_budget(request.query)
         logger.info(f"Received query: {sanitize_for_logging(request.query[:100])}... (session: {request.session_id})")
 
         # Apply input guardrails
@@ -152,6 +164,8 @@ async def ask(request: AskRequest) -> AgentResponse:
         logger.info(f"Query processed successfully. Intent: {response.intent}, session: {sanitize_for_logging(request.session_id)}")
         return response
 
+    except BudgetExceeded as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         logger.error(f"Error processing query: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Query processing failed: {str(e)}")
@@ -274,9 +288,24 @@ async def websocket_chat(websocket: WebSocket):
 
             logger.info(f"WebSocket message received (type: {message.type}, session: {sanitize_for_logging(session_id)})")
 
+            try:
+                check_budget(message.content)
+            except BudgetExceeded:
+                logger.warning("Budget exceeded in WebSocket message")
+                await websocket.send_json({
+                    "type": "error",
+                    "error": "Token budget exceeded",
+                    "status": 400
+                })
+                await websocket.close(code=1008, reason="Token budget exceeded")
+                continue
+
             # Process user query
             if message.type == "user_query":
                 try:
+                    # Apply budget guard
+                    check_budget(message.content)
+
                     # Apply input guardrails
                     sanitized_query, injection_rejection = apply_input_guardrails(message.content)
 
