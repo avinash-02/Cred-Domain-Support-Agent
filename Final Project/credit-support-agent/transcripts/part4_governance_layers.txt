@@ -4,54 +4,19 @@ cachedir: .pytest_cache
 rootdir: C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent
 plugins: anyio-4.16.0, langsmith-0.14.17, platformdirs-4.14.4, asyncio-1.4.1.post1
 asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
-collecting ... collected 35 items
+collecting ... collected 35 items / 1 error
 
-tests/test_api.py::test_ask_basic_query PASSED                           [  2%]
-tests/test_api.py::test_ask_with_session_id PASSED                       [  5%]
-tests/test_api.py::test_ask_prompt_injection_detection PASSED            [  8%]
-tests/test_api.py::test_ask_with_pii_masking PASSED                      [ 11%]
-tests/test_api.py::test_add_document_basic PASSED                        [ 14%]
-tests/test_api.py::test_add_document_with_metadata PASSED                [ 17%]
-tests/test_api.py::test_add_document_without_metadata PASSED             [ 20%]
-tests/test_api.py::test_health_check PASSED                              [ 22%]
-tests/test_api.py::test_websocket_basic_message PASSED                   [ 25%]
-tests/test_api.py::test_websocket_multi_turn_conversation PASSED         [ 28%]
-tests/test_api.py::test_websocket_session_isolation PASSED               [ 31%]
-tests/test_api.py::test_websocket_invalid_message_format PASSED          [ 34%]
-tests/test_api.py::test_websocket_unknown_message_type PASSED            [ 37%]
-tests/test_api.py::test_websocket_prompt_injection_detection PASSED      [ 40%]
-tests/test_api.py::test_websocket_graceful_disconnect PASSED             [ 42%]
-tests/test_api.py::test_integration_ask_then_websocket PASSED            [ 45%]
-tests/test_api.py::test_integration_document_ingestion_affects_rag PASSED [ 48%]
-tests/test_autogen_review.py::test_review_approval PASSED                [ 51%]
-tests/test_autogen_review.py::test_review_revision PASSED                [ 54%]
-tests/test_evaluation.py::test_benchmark PASSED                          [ 57%]
-tests/test_governance.py::test_tool_allocation PASSED                    [ 60%]
-tests/test_governance.py::test_request_within_budget PASSED              [ 62%]
-tests/test_governance.py::test_request_exceeds_budget PASSED             [ 65%]
-tests/test_judge_evaluation.py::test_judge_evaluation PASSED             [ 68%]
-tests/test_logging.py::test_every_line_is_valid_json PASSED              [ 71%]
-tests/test_logging.py::test_pii_masked_in_log PASSED                     [ 74%]
-tests/test_logging.py::test_trace_and_latency PASSED                     [ 77%]
-tests/test_pipeline.py::test_rag_pipeline_retrieval PASSED               [ 80%]
-tests/test_pipeline.py::test_escalation_scoring_formula PASSED           [ 82%]
-tests/test_pipeline.py::test_schema_based_dispatch_and_structured_output PASSED [ 85%]
-tests/test_pipeline.py::test_session_memory_continuity_and_isolation PASSED [ 88%]
-tests/test_pipeline.py::test_guardrail_pii_masking PASSED                [ 91%]
-tests/test_pipeline.py::test_guardrail_prompt_injection PASSED           [ 94%]
-tests/test_pipeline.py::test_guardrail_groundedness_refusal PASSED       [ 97%]
-tests/test_pipeline.py::test_integration_full_pipeline ┌────────────────────────────── Tracing Status ───────────────────────────────┐
-│                                                                             │
-│  Info: Tracing is disabled.                                                 │PASSED            [100%]
-                                                                             │
-│  To enable tracing, do any one of these:                                    │
-│  • Set tracing=True in your Crew/Flow code                                  │
-│  • Set CREWAI_TRACING_ENABLED=true in your project's .env file              │
-│  • Run: crewai traces enable                                                │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-
+=================================== ERRORS ====================================
+____________________ ERROR collecting tests/test_cache.py _____________________
+tests\test_cache.py:7: in <module>
+    mock_response = AgentResponse(
+E   pydantic_core._pydantic_core.ValidationError: 2 validation errors for AgentResponse
+E   query
+E     Field required [type=missing, input_value={'answer': 'Mocked Answer...urces': ['mock_source']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.12/v/missing
+E   intent
+E     Input should be 'policy_inquiry', 'application_status', 'mixed' or 'general' [type=literal_error, input_value='mock_intent', input_type=str]
+E       For further information visit https://errors.pydantic.dev/2.12/v/literal_error
 ============================== warnings summary ===============================
 src\orchestration\structured_output.py:11
   C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent\src\orchestration\structured_output.py:11: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
@@ -163,75 +128,8 @@ src\api\server.py:44
   C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent\src\api\server.py:44: LangChainDeprecationWarning: RunnableWithMessageHistory is deprecated. Use LangGraph's built-in persistence instead.
     from src.memory.session_memory import get_session_history, SESSION_STORE
 
-tests/test_api.py: 18 warnings
-tests/test_evaluation.py: 13 warnings
-tests/test_governance.py: 1 warning
-tests/test_judge_evaluation.py: 14 warnings
-tests/test_logging.py: 2 warnings
-tests/test_pipeline.py: 2 warnings
-  C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent\.venv\Lib\site-packages\crewai\crew.py:652: DeprecationWarning: function_calling_llm is deprecated and will be removed in a future release.
-    if self.function_calling_llm and not isinstance(self.function_calling_llm, LLM):
-
-tests/test_api.py: 12 warnings
-tests/test_evaluation.py: 13 warnings
-tests/test_governance.py: 1 warning
-tests/test_judge_evaluation.py: 14 warnings
-tests/test_logging.py: 2 warnings
-tests/test_pipeline.py: 2 warnings
-  C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent\.venv\Lib\site-packages\crewai\crews\utils.py:372: DeprecationWarning: function_calling_llm is deprecated and will be removed in a future release.
-    crew.function_calling_llm,
-
-tests/test_api.py: 36 warnings
-tests/test_evaluation.py: 39 warnings
-tests/test_governance.py: 3 warnings
-tests/test_judge_evaluation.py: 42 warnings
-tests/test_logging.py: 6 warnings
-tests/test_pipeline.py: 6 warnings
-  C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent\.venv\Lib\site-packages\crewai\crews\utils.py:87: DeprecationWarning: function_calling_llm is deprecated and will be removed in a future release.
-    if not agent.function_calling_llm:  # type: ignore[attr-defined]
-
-tests/test_api.py::test_ask_basic_query
-tests/test_api.py::test_ask_basic_query
-tests/test_api.py::test_ask_basic_query
-  C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent\.venv\Lib\site-packages\crewai\agent\core.py:1303: DeprecationWarning: function_calling_llm is deprecated and will be removed in a future release.
-    function_calling_llm=self.function_calling_llm,
-
-tests/test_api.py: 24 warnings
-tests/test_evaluation.py: 50 warnings
-tests/test_governance.py: 2 warnings
-tests/test_judge_evaluation.py: 52 warnings
-tests/test_logging.py: 4 warnings
-tests/test_pipeline.py: 4 warnings
-  C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent\.venv\Lib\site-packages\crewai\crew.py:1681: DeprecationWarning: deprecated
-    if hasattr(agent, "allow_code_execution") and getattr(
-
-tests/test_api.py: 12 warnings
-tests/test_evaluation.py: 25 warnings
-tests/test_governance.py: 1 warning
-tests/test_judge_evaluation.py: 26 warnings
-tests/test_logging.py: 2 warnings
-tests/test_pipeline.py: 2 warnings
-  C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent\.venv\Lib\site-packages\crewai\crew.py:1688: DeprecationWarning: deprecated
-    and hasattr(agent, "multimodal")
-
-tests/test_api.py: 12 warnings
-tests/test_evaluation.py: 25 warnings
-tests/test_governance.py: 1 warning
-tests/test_judge_evaluation.py: 26 warnings
-tests/test_logging.py: 2 warnings
-tests/test_pipeline.py: 2 warnings
-  C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent\.venv\Lib\site-packages\crewai\crew.py:1689: DeprecationWarning: deprecated
-    and getattr(agent, "multimodal", False)
-
-tests/test_api.py: 13 warnings
-tests/test_governance.py: 2 warnings
-tests/test_logging.py: 3 warnings
-  C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent\src\observability\logging.py:45: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
-    "timestamp": datetime.utcnow().isoformat() + "Z",
-
-tests/test_api.py::test_ask_with_session_id
-  C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent\src\memory\session_memory.py:25: LangChainDeprecationWarning: The class `InMemoryChatMessageHistory` was deprecated in LangChain 1.6.4 and will be removed in 2.0.0 See the short-term memory documentation for recommended alternatives: https://docs.langchain.com/oss/python/langchain/short-term-memory
-    SESSION_STORE[session_id] = InMemoryChatMessageHistory()
-
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-================= 35 passed, 552 warnings in 78.52s (0:01:18) =================
+=========================== short test summary info ===========================
+ERROR tests/test_cache.py - pydantic_core._pydantic_core.ValidationError: 2 v...
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+======================= 32 warnings, 1 error in 41.91s ========================

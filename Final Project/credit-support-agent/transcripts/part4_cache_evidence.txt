@@ -1,0 +1,29 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.13.17, pytest-9.2.0, pluggy-1.7.0 -- C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent
+plugins: anyio-4.16.0, langsmith-0.14.17, platformdirs-4.14.4, asyncio-1.4.1.post1
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 0 items / 1 error
+
+=================================== ERRORS ====================================
+____________________ ERROR collecting tests/test_cache.py _____________________
+tests\test_cache.py:7: in <module>
+    mock_response = AgentResponse(
+E   pydantic_core._pydantic_core.ValidationError: 2 validation errors for AgentResponse
+E   query
+E     Field required [type=missing, input_value={'answer': 'Mocked Answer...urces': ['mock_source']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.12/v/missing
+E   intent
+E     Input should be 'policy_inquiry', 'application_status', 'mixed' or 'general' [type=literal_error, input_value='mock_intent', input_type=str]
+E       For further information visit https://errors.pydantic.dev/2.12/v/literal_error
+============================== warnings summary ===============================
+src\orchestration\structured_output.py:11
+  C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent\src\orchestration\structured_output.py:11: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AgentResponse(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR tests/test_cache.py - pydantic_core._pydantic_core.ValidationError: 2 v...
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+========================= 1 warning, 1 error in 0.41s =========================

@@ -17,6 +17,7 @@ from crewai import Agent, Crew, Task
 from src.llm.mock_llm_crewai import MockLLM
 from src.tools.crewai_tools import retrieve_banking_policy, check_application_status
 from src.orchestration.structured_output import AgentResponse, format_crew_response_as_structured
+from src.cache.response_cache import QueryCache
 
 
 # ============================================================================
@@ -165,6 +166,13 @@ def create_crew(query: str):
 
 
 # ============================================================================
+# Global QueryCache
+# ============================================================================
+
+query_cache = QueryCache()
+
+
+# ============================================================================
 # Structured Output Wrapper
 # ============================================================================
 
@@ -172,16 +180,14 @@ def run_crew(query: str) -> AgentResponse:
     """
     Execute crew on query and return validated AgentResponse.
 
-    This is the primary function for running the crew. It wraps create_crew()
-    and crew.kickoff() to ensure all responses are validated against the
-    unified AgentResponse Pydantic schema.
-
-    Args:
-        query: User query to process
-
-    Returns:
-        AgentResponse: Validated structured response with schema enforcement
+    Uses caching to avoid re-executing identical queries.
     """
+
+    # Check cache first
+    cached_response = query_cache.get(query)
+    if cached_response is not None:
+        return cached_response
+
     import re
 
     # Create and execute crew
@@ -230,7 +236,12 @@ def run_crew(query: str) -> AgentResponse:
     )
 
     # Validate against schema
-    return AgentResponse.model_validate(response.model_dump())
+    structured_response = AgentResponse.model_validate(response.model_dump())
+
+    # Cache the result
+    query_cache.set(query, structured_response)
+
+    return structured_response
 
 
 async def run_crew_async(query: str) -> AgentResponse:
