@@ -21,6 +21,7 @@ from typing import Optional
 from fastapi import FastAPI, WebSocket, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.websockets import WebSocketDisconnect
+from src.observability.logging import StructuredLoggingMiddleware
 
 from src.api.schemas import (
     AskRequest,
@@ -77,11 +78,16 @@ def _get_rag_doc_count() -> int:
 # FastAPI Application
 # ============================================================================
 
+from src.observability.logging import StructuredLoggingMiddleware
+
 app = FastAPI(
     title="Credit Support Agent API",
     description="Multi-agent credit support system with RAG, session memory, and guardrails",
     version="1.0.0",
 )
+
+# Add structured logging middleware
+app.add_middleware(StructuredLoggingMiddleware)
 
 # Add CORS middleware
 app.add_middleware(
