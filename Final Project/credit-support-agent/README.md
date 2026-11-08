@@ -110,10 +110,10 @@ Measured top-1 cosine distance for in-scope and out-of-scope queries to empirica
 - 15 test queries with evaluation results
 
 ### Part 4: Production Hardening
-- AutoGen 2-agent review (approve/revise)
-- Least autonomy enforcement
-- Cost budget capping
-- Response caching with cache-hit demonstration
+- AutoGen 2-agent review (Policy-Compliance-Reviewer + Final-Editor) with structured Verdict output
+- Evaluation harness (`tests/test_judge_evaluation.py`) with 15 queries covering KB + edge cases
+- Quality metrics (Accuracy, Grounding, Completeness, Safety) with threshold validation (>= 0.8)
+- Results persisted to `evaluation_judge_results.json`
 
 ## Setup
 
