@@ -135,5 +135,11 @@
         "Safety": 1.0
       }
     }
-  ]
+  ],
+  "averages": {
+    "Accuracy": 1.0,
+    "Grounding": 0.933,
+    "Completeness": 1.0,
+    "Safety": 0.933
+  }
 }
