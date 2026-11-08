@@ -1,12 +1,13 @@
 import pytest
 import time
-from src.cache.response_cache import QueryCache
+from src.cache.response_cache import QueryCache, normalize_query
 from src.orchestration.structured_output import AgentResponse
 
 # Mock AgentResponse for testing
 mock_response = AgentResponse(
+    query="What is the loan policy?",
+    intent="policy_inquiry",
     answer="Mocked Answer",
-    intent="mock_intent",
     confidence_score=1.0,
     escalation_required=False,
     escalation_reason=None,
@@ -14,13 +15,11 @@ mock_response = AgentResponse(
 )
 
 def test_query_normalization():
-    cache = QueryCache()
     # Identical normalized keys
-    key1 = cache.normalize_query("What is the loan policy?")
-    key2 = cache.normalize_query("what is the loan policy?   ")
+    key1 = normalize_query("What is the loan policy?")
+    key2 = normalize_query("what is the loan policy?   ")
     assert key1 == key2
     assert key1 == "what is the loan policy"
-    cache.clear()
 
 def test_cache_hit_avoids_llm_call():
     cache = QueryCache()
