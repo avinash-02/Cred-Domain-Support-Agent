@@ -9,4 +9,4 @@ collecting ... collected 2 items
 tests/test_autogen_review.py::test_review_approval PASSED
 tests/test_autogen_review.py::test_review_revision PASSED
 
-============================== 2 passed in 0.72s ==============================
+============================== 2 passed in 0.64s ==============================
