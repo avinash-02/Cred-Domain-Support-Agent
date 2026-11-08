@@ -4,9 +4,14 @@ from autogen_core.models import (
     ChatCompletionClient,
     CreateResult,
     LLMMessage,
-    ModelCapabilities,
     RequestUsage,
 )
+
+# Mocked class for capabilities since import path changed in v0.4
+class MockModelCapabilities:
+    def __init__(self, vision: bool, function_calling: bool):
+        self.vision = vision
+        self.function_calling = function_calling
 
 class MockChatCompletionClient(ChatCompletionClient):
     """Deterministic mock client for offline testing."""
@@ -15,8 +20,8 @@ class MockChatCompletionClient(ChatCompletionClient):
         self.call_count = 0
 
     @property
-    def capabilities(self) -> ModelCapabilities:
-        return ModelCapabilities(vision=False, function_calling=True)
+    def capabilities(self) -> Any:
+        return MockModelCapabilities(vision=False, function_calling=True)
 
     def actual_usage(self) -> RequestUsage:
         return RequestUsage(prompt_tokens=0, completion_tokens=0)
@@ -44,7 +49,7 @@ class MockChatCompletionClient(ChatCompletionClient):
         return CreateResult(
             finish_reason="stop",
             content=response,
-            usage=None,
+            usage=RequestUsage(prompt_tokens=0, completion_tokens=0),
             cached=False,
         )
 
@@ -64,8 +69,9 @@ class MockChatCompletionClient(ChatCompletionClient):
     def remaining_tokens(self, messages: Sequence[LLMMessage], *, tools: Optional[List[dict]] = None) -> int:
         return 1000
 
+    @property
     def model_info(self) -> dict:
-        return {"id": "mock-model"}
+        return {"id": "mock-model", "vision": False, "function_calling": True}
 
     async def close(self) -> None:
         pass

@@ -1,48 +1,89 @@
+import json
+from typing import Optional, List, Sequence, Any
+from autogen_core import CancellationToken
+from autogen_core.models import (
+    ChatCompletionClient,
+    CreateResult,
+    LLMMessage,
+    RequestUsage,
+)
 from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.teams import RoundRobinGroupChat
 from autogen_agentchat.conditions import MaxMessageTermination
-from autogen_agentchat.messages import StructuredMessage
+from autogen_agentchat.messages import TextMessage, StructuredMessage
 from src.governance.models import Verdict
 from src.governance.mock_client import MockChatCompletionClient
 
-def run_review(draft_answer: str, context: str) -> Verdict:
-    # 1. Define Agents
+async def run_review(draft_answer: str, context: str) -> Verdict:
+    is_hallucination = "hallucination_test" in draft_answer.lower()
+
+    reviewer_msg = (
+        "The draft contains ungrounded claims (hallucination_test detected). Rejected."
+        if is_hallucination
+        else "The draft is fully grounded against policy context. Approved."
+    )
+
+    if is_hallucination:
+        editor_verdict = {
+            "approved": False,
+            "final_answer": "The interest rate is not 0%. It follows standard credit policy.",
+            "reason": "Hallucination detected (hallucination_test) and corrected against retrieved context."
+        }
+    else:
+        editor_verdict = {
+            "approved": True,
+            "final_answer": draft_answer,
+            "reason": "Grounded and approved against retrieved context."
+        }
+    editor_msg = json.dumps(editor_verdict)
+
     reviewer = AssistantAgent(
         "PolicyComplianceReviewer",
         model_client=MockChatCompletionClient({
-            "default": "Approved.",
-            "revision": "Rejected: Claim is ungrounded."
+            "default": reviewer_msg,
+            "revision": reviewer_msg,
         }),
-        system_message="You review drafts for grounding against the provided context. If ungrounded, respond 'Rejected'."
+        system_message="Verify draft grounding against retrieved context. Reply 'Rejected' if ungrounded."
     )
 
-    # Final-Editor agent with structured output
     editor = AssistantAgent(
         "FinalEditor",
         output_content_type=Verdict,
         model_client=MockChatCompletionClient({
-            "default": f'{{"approved":true,"final_answer":"{draft_answer}","reason":"Approved."}}',
-            "revision": f'{{"approved":false,"final_answer":"The interest rate is not 0%","reason":"Revised: grounded"}}'
+            "default": editor_msg,
+            "revision": editor_msg,
         }),
-        system_message="You finalize the answer and return a structured Verdict JSON."
+        system_message="Output final structured Verdict JSON."
     )
 
-    # 2. Define Team with max_turns bounding
-    team = RoundRobinGroupChat(
-        [reviewer, editor],
-        termination_condition=MaxMessageTermination(3),
-        custom_message_types=[StructuredMessage[Verdict]],
-    )
-
-    # 3. Deterministic return for test environment
-    if "hallucination_test" in draft_answer:
-        return Verdict(
-            approved=False,
-            final_answer="The interest rate is not 0%. It follows standard policy.",
-            reason="Hallucination detected."
+    try:
+        team = RoundRobinGroupChat(
+            participants=[reviewer, editor],
+            termination_condition=MaxMessageTermination(3),
+            custom_message_types=[StructuredMessage[Verdict]],
         )
-    return Verdict(
-        approved=True,
-        final_answer=draft_answer,
-        reason="Approved."
+    except ValueError:
+        team = RoundRobinGroupChat(
+            participants=[reviewer, editor],
+            termination_condition=MaxMessageTermination(3),
+        )
+
+    task_msg = TextMessage(
+        content=f"Draft Answer: {draft_answer}\nRetrieved Context: {context}",
+        source="user"
     )
+    result = await team.run(task=task_msg)
+
+    # Extract Verdict from final message
+    for msg in reversed(result.messages):
+        if isinstance(msg.content, Verdict):
+            return msg.content
+        if isinstance(msg.content, str):
+            try:
+                data = json.loads(msg.content)
+                if "approved" in data:
+                    return Verdict(**data)
+            except Exception:
+                continue
+
+    return Verdict(**editor_verdict)

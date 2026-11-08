@@ -1,5 +1,4 @@
 import pytest
-import asyncio
 from src.governance.models import Verdict
 from src.governance.review import run_review
 
@@ -8,10 +7,12 @@ async def test_review_approval():
     draft = "The prepayment penalty is 2%."
     context = "Prepayment penalty is 2%."
 
-    verdict = run_review(draft, context)
+    verdict = await run_review(draft, context)
 
     assert verdict.approved is True
     assert verdict.final_answer == draft
+    # The actual reason returned by the fallback or mock is "Approved."
+    assert "approved" in verdict.reason.lower()
 
 @pytest.mark.asyncio
 async def test_review_revision():
@@ -19,7 +20,7 @@ async def test_review_revision():
     draft = "The interest rate is 0% (hallucination_test)."
     context = "Interest rates are governed by standard slabs."
 
-    verdict = run_review(draft, context)
+    verdict = await run_review(draft, context)
 
     assert verdict.approved is False
     assert "hallucination" in verdict.reason.lower()

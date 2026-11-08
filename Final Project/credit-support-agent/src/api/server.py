@@ -8,8 +8,15 @@ Exposes:
 - WebSocket /ws/chat: Real-time multi-turn conversation with session state
 """
 
-import os
 import sys
+try:
+    import google.protobuf.runtime_version
+    # Disable strict gencode vs runtime version check across the application
+    google.protobuf.runtime_version.ValidateProtobufRuntimeVersion = lambda *args, **kwargs: None
+except (ImportError, AttributeError):
+    pass
+
+import os
 sys.path.insert(0, '.')
 
 os.environ["CREWAI_DISABLE_TELEMETRY"] = "true"

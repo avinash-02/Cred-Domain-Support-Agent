@@ -1,0 +1,12 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.13.17, pytest-9.2.0, pluggy-1.7.0 -- C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Lenovo\Desktop\Python\Final Project\credit-support-agent
+plugins: anyio-4.16.0, langsmith-0.14.17, platformdirs-4.14.4, asyncio-1.4.1.post1
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 2 items
+
+tests/test_autogen_review.py::test_review_approval PASSED
+tests/test_autogen_review.py::test_review_revision PASSED
+
+============================== 2 passed in 0.72s ==============================
