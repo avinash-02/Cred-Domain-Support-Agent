@@ -1,4 +1,4 @@
-# Credit Support Agent — Banking RAG + CrewAI Multi-Agent System
+# Cred Support Agent — Banking RAG + CrewAI Multi-Agent System
 
 A comprehensive full-stack banking agent combining RAG retrieval, multi-agent orchestration, and FastAPI backend with structured evaluation.
 
