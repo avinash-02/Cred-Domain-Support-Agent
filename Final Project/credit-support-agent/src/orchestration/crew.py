@@ -232,6 +232,26 @@ def run_crew(query: str) -> AgentResponse:
     # Validate against schema
     return AgentResponse.model_validate(response.model_dump())
 
+
+async def run_crew_async(query: str) -> AgentResponse:
+    """
+    Async wrapper for run_crew to be used in FastAPI async endpoints.
+
+    Runs the crew in a thread pool executor to avoid blocking the event loop.
+
+    Args:
+        query: User query to process
+
+    Returns:
+        AgentResponse: Validated structured response with schema enforcement
+    """
+    import asyncio
+    from concurrent.futures import ThreadPoolExecutor
+
+    loop = asyncio.get_event_loop()
+    with ThreadPoolExecutor() as executor:
+        return await loop.run_in_executor(executor, run_crew, query)
+
 def run_demonstration():
     """Run demonstration on all three query types."""
 
